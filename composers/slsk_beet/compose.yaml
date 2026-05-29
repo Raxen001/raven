@@ -1,0 +1,37 @@
+services:
+  soulseek:
+    image: slskd/slskd
+    container_name: slskd
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - "SLSKD_SHARED_DIR=/Media" # Media direcotreis "/Media;/tv-shows" for multiple
+      - "SLSKD_DOWNLOADS_DIR=/Downloads/soulseek/downloads/"
+      - "SLSKD_INCOMPLETE_DIR=/Downloads/soulseek/incomplete/"
+    volumes:
+      - ~/data/soulseek/:/app
+      - /hdd/Media/music/:/Media
+      - /hdd/Downloads/:/Downloads/
+    ports:
+      - "5030:5030" # HTTP
+      # - "5031:5031" # HTTPS
+      # - "50300:50300" # soulseek port
+      - "2234:2234" # soulseek port
+    restart: unless-stopped
+
+  beets:
+    image: lscr.io/linuxserver/beets:latest
+    container_name: beets
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - DOCKER_MODS=linuxserver/mods:universal-package-install
+      - INSTALL_PIP_PACKAGES=beets[lyrics]
+      - INSTALL_PACKAGES=neovim
+    volumes:
+      - ~/data/beets/:/config/
+      - /hdd/Media/music/:/music/
+      - /hdd/Downloads/soulseek/downloads/:/downloads/
+    ports:
+      - 8337:8337
+    restart: unless-stopped

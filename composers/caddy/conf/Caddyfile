@@ -1,0 +1,100 @@
+# vim: set ft=conf
+#
+# {
+# 	log {
+# 		output file /etc/caddy/caddy-log.json {
+# 			mode 444
+# 			roll_uncompressed
+# 		}
+# 	}
+# }
+
+movie.{$DOMAIN} {
+	reverse_proxy http://jellyfin:8096
+}
+
+rss.{$DOMAIN} {
+	reverse_proxy http://miniflux:8080
+}
+
+voxabook.{$DOMAIN} {
+	reverse_proxy http://host.docker.internal:9124
+}
+
+torrent.{$DOMAIN} {
+	reverse_proxy http://qbittorrent:8080
+}
+
+speed.{$DOMAIN} {
+	reverse_proxy http://speedtest:3000 {
+		request_buffers 35MiB
+		response_buffers 35MiB
+		flush_interval -1
+	}
+}
+
+home.{$DOMAIN} {
+	reverse_proxy http://homarr:7575
+}
+
+photos.{$DOMAIN} {
+	reverse_proxy http://immich-server:2283
+}
+
+navidrome.{$DOMAIN} {
+	reverse_proxy http://navidrome:4533
+}
+
+music.{$DOMAIN} {
+	reverse_proxy http://feishin:9180
+}
+
+soulseek.{$DOMAIN} {
+	reverse_proxy http://soulseek:5030
+}
+
+vault.{$DOMAIN} {
+	reverse_proxy http://vaultwarden:80
+}
+
+seerr.{$DOMAIN} {
+	reverse_proxy http://seerr:5055
+}
+
+money.{$DOMAIN} {
+	reverse_proxy http://firefly_iii_core:8080
+}
+
+draw.{$DOMAIN} {
+	reverse_proxy http://drawio:8080
+}
+
+beszel.{$DOMAIN} {
+	reverse_proxy http://beszel:8090
+}
+
+manga.{$DOMAIN} {
+	reverse_proxy http://suwayomi:4567
+}
+
+paper.{$DOMAIN} {
+	reverse_proxy http://paperless:8000 {
+		header_down Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}
+
+# radarr.{$DOMAIN} {
+#     reverse_proxy http://radarr:7575
+# }
+#
+# sonarr.{$DOMAIN} {
+#     reverse_proxy http://sonarr:8989
+# }
+#
+# lidarr.{$DOMAIN} {
+#     reverse_proxy http://lidarr:8686
+# }
+#
+# prowlarr.{$DOMAIN} {
+#     reverse_proxy http://prowlarr:9696
+# }

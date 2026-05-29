@@ -1,0 +1,11 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    environment:
+      DOMAIN: "https://vault.raxen001.xyz"
+    volumes:
+      - /hdd/password/:/data/
+    # ports:
+    #   - "8192:80"
+    restart: unless-stopped

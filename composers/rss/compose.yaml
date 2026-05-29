@@ -1,0 +1,32 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    depends_on:
+      miniflux-db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - RUN_MIGRATIONS=1
+      # - CREATE_ADMIN=1
+      # - ADMIN_USERNAME=admin
+      # - ADMIN_PASSWORD=test123
+    ports:
+      - "9191:8080"
+    restart: unless-stopped
+
+  miniflux-db:
+    image: postgres:17-alpine
+    env_file: .env
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_DB=miniflux
+    volumes:
+      - miniflux-db:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
+
+volumes:
+  miniflux-db:

@@ -1,0 +1,106 @@
+services:
+
+  # Home page
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    environment:
+      - SECRET_ENCRYPTION_KEY=18a6455eaceffca45eb7ab8e824f99de5352b1611b94c985d866e3b92650a923
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock 
+      - ~/data/homarr/appdata:/appdata
+      - ~/data/homarr/configs:/app/data/configs
+      - ~/data/homarr/icons:/app/public/icons
+      - ~/data/homarr/data:/data
+    ports:
+      - '7575:7575'
+    restart: unless-stopped
+
+  #radarr - for movies
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ~/data/radarr/:/config
+      - /hdd/:/hdd/
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  # sonarr - tv shows
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ~/data/sonarr:/config
+      - /hdd/:/hdd/
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  # lidarr - music 
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ~/data/lidarr:/config
+      - /hdd/:/hdd/
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+  # Torrent indexer
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ~/data/prowlarr/:/config
+      - /hdd/:/hdd/
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  # subtitle
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ~/data/bazarr/config:/config
+      - /hdd/:/hdd/
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+
+  # resolve cloudflare proxy
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Asia/Kolkata
+    ports:
+      - "${PORT:-8191}:8191"
+    restart: unless-stopped
+

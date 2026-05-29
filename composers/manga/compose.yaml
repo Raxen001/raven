@@ -1,0 +1,24 @@
+services:
+  suwayomi:
+    image: ghcr.io/suwayomi/suwayomi-server:preview
+    environment:
+      - TZ=Asia/Kolkata
+      - BIND_IP=0.0.0.0
+      - BIND_PORT=4567
+      - DOWNLOAD_AS_CBZ=true
+      - EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
+      # - SOCKS_PROXY_ENABLED=false
+      # - AUTH_MODE=basic_auth
+      # - AUTH_USERNAME=manga
+      # - AUTH_PASSWORD=hello123
+
+      # Comment these out if you do not use the flaresolverr container at the bottom of this file
+      - FLARESOLVERR_ENABLED=true
+      - FLARESOLVERR_URL=http://flaresolverr:8191
+      - DEBUG=false
+    volumes:
+      - ~/data/manga/:/home/suwayomi/.local/share/Tachidesk
+      - /hdd/Media/manga/:/downloads
+    ports:
+      - "4567:4567"
+    restart: on-failure:3

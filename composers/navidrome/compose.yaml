@@ -1,0 +1,28 @@
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - ND_MUSICFOLDER=/music/artists/
+    volumes:
+      - ~/data/navidrome:/data
+      - "/hdd/Media/music/:/music/:ro"
+    ports:
+      - "4533:4533"
+    restart: unless-stopped
+
+  feishin:
+      image: 'ghcr.io/jeffvli/feishin:latest'
+      environment:
+          - PUID=1000
+          - PGID=1000
+          - TZ=Asia/Kolkata
+          - SERVER_NAME=raven
+          - SERVER_LOCK=false
+          - SERVER_TYPE=navidrome # navidrome also works
+          - SERVER_URL=https://navidrome.raxen001.xyz
+      ports:
+          - 9180:9180
+      restart: unless-stopped

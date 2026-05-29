@@ -1,0 +1,42 @@
+services:
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - ~/data/qbittorrent/:/config
+      - /hdd/:/hdd/
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+
+  speedtest:
+    image: openspeedtest/latest 
+    environment:
+        - ENABLE_LETSENCRYPT=False
+        - DOMAIN_NAME=speedtest.yourdomain.com
+        - USER_EMAIL=raxen001@tutamail.com
+        - VERIFY_OWNERSHIP="TXT-FILE-CONTENT"
+    ports:
+         - '8787:3000'
+         - '8788:3001'
+    restart: unless-stopped
+
+  drawio:
+    container_name: drawio
+    image: jgraph/drawio
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    ports:
+      - 9891:8080
+    restart: unless-stopped

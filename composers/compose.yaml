@@ -1,0 +1,14 @@
+include:
+  - ./apps/compose.yaml
+  - ./immich/compose.yaml
+  - ./firefly/compose.yaml
+  - ./vaultwarden/compose.yaml
+  - ./jellyfin/compose.yaml
+  - ./arr/compose.yaml
+  - ./navidrome/compose.yaml
+  - ./rss/compose.yaml
+  - ./paperless/compose.yaml
+  - ./slsk_beet/compose.yaml
+  - ./beszel/compose.yaml
+  - ./manga/compose.yaml
+  - ./caddy/compose.yaml

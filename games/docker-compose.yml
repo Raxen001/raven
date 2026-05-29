@@ -1,0 +1,45 @@
+services:
+  crafty:
+    container_name: crafty_container
+    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kolkata
+      - UID=1000
+      - GID=1000
+    ports:
+      - "7172:8000" # HTTP
+      - "7171:8443" # HTTPS
+      - "8123:8123" # DYNMAP
+      - "19132:19132/udp" # BEDROCK
+      - "25500-25600:25500-25600" # MC SERV PORT RANGE
+    volumes:
+      - ~/games/minecraft/backups:/crafty/backups
+      - ~/games/minecraft/logs:/crafty/logs
+      - ~/games/minecraft/servers:/crafty/servers
+      - ~/games/minecraft/config:/crafty/app/config
+      - ~/games/minecraft/import:/crafty/import
+
+  linuxgsm-ark:
+    image: ghcr.io/gameservermanagers/gameserver:ark
+    # image: gameservermanagers/gameserver:cs2
+    container_name: ark
+    volumes:
+      - ~/games/ark/:/data
+    restart: unless-stopped
+    ports:
+      # https://ark.fandom.com/wiki/Dedicated_server_setup
+      - "7777:7777/udp"
+      - "7778:7778/udp"
+      - "27015:27015/udp"
+      - "55221:55221/udp"
+      - "27020:27020"
+    # network_mode: host
+
+  linuxgsm-ac:
+    image: ghcr.io/gameservermanagers/gameserver:ac
+    container_name: ac
+    volumes:
+      - ~/games/ac/:/data
+    restart: unless-stopped
+    network_mode: host

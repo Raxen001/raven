@@ -1,0 +1,49 @@
+services:
+
+  # Media server
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - LOG_LEVEL=debug
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ~/data/jellyfin/:/config
+      - ~/.cache/jellyfin/:/cache
+      - /hdd/Media/:/Media
+    ports:
+      - 8096:8096
+      - 7359:7359/udp
+      - 1900:1900/udp
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+    restart: unless-stopped
+
+  # Frontend for requesting movies
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    container_name: seerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - LOG_LEVEL=debug
+      - TZ=Asia/Kolkata
+      - PORT=5055
+    volumes:
+      - ~/data/seerr:/app/config
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+      - 8.8.4.4
+    ports:
+      - 5055:5055
+    restart: unless-stopped

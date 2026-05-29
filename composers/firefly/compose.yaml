@@ -1,0 +1,40 @@
+services:
+  fireflyiii:
+    image: fireflyiii/core:latest
+    hostname: fireflyiii
+    container_name: firefly_iii_core
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: .env
+    ports:
+      - 8888:8080
+    depends_on:
+      - db
+    restart: always
+  db:
+    image: mariadb:lts
+    hostname: db
+    container_name: firefly_iii_db
+    restart: always
+    env_file: .db.env
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+  cron:
+    #
+    # To make this work, set STATIC_CRON_TOKEN in your .env file or as an environment variable and replace REPLACEME below
+    # The STATIC_CRON_TOKEN must be *exactly* 32 characters long
+    #
+    image: alpine
+    restart: always
+    container_name: firefly_iii_cron
+    env_file: .env
+    command: sh -c "
+      apk add tzdata
+      && ln -s /usr/share/zoneinfo/${TZ} /etc/localtime
+      | echo \"0 3 * * * wget -qO- http://fireflyiii:8080/api/v1/cron/aac56dacafafb701724f0493738536ba;echo\" 
+      | crontab - 
+      && crond -f -L /dev/stdout"
+
+volumes:
+   firefly_iii_upload:
+   firefly_iii_db:
