@@ -7,7 +7,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Kolkata
-      - LOG_LEVEL=debug
+      # - LOG_LEVEL=debug
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
       - ~/data/jellyfin/:/config
@@ -16,7 +16,7 @@ services:
     ports:
       - 8096:8096
       - 7359:7359/udp
-      - 1900:1900/udp
+      # - 1900:1900/udp # DLNA has been disabled.
     deploy:
       resources:
         reservations:
@@ -35,7 +35,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - LOG_LEVEL=debug
+      # - LOG_LEVEL=debug
       - TZ=Asia/Kolkata
       - PORT=5055
     volumes:

@@ -16,6 +16,7 @@ services:
       # - "5031:5031" # HTTPS
       # - "50300:50300" # soulseek port
       - "2234:2234" # soulseek port
+      - "2242:2242" # soulseek port
     restart: unless-stopped
 
   beets:
