@@ -11,4 +11,5 @@ include:
   - ./slsk_beet/compose.yaml
   - ./beszel/compose.yaml
   - ./manga/compose.yaml
+  - ./telemetry/compose.yaml
   - ./caddy/compose.yaml

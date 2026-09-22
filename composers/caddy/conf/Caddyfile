@@ -1,4 +1,4 @@
-# vim: set ft=conf
+#{ vim: set ft=conf
 #
 # {
 # 	log {
@@ -8,6 +8,15 @@
 # 		}
 # 	}
 # }
+
+{
+	admin :2019 # needs for prometheus
+    metrics {
+		per_host
+	}
+
+}
+
 
 movie.{$DOMAIN} {
 	reverse_proxy http://jellyfin:8096

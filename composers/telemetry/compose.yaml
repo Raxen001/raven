@@ -1,0 +1,26 @@
+# https://grafana.com/grafana/dashboards/24146-caddy-hosts/
+services:
+  grafana:
+    image: grafana/grafana-enterprise
+    user: '0'
+    container_name: grafana
+    environment:
+      - GF_PLUGINS_PREINSTALL=grafana-clock-panel
+    ports:
+      - 3000:3000
+    volumes:
+      - ~/data/telemetry/grafana/:/var/lib/grafana
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    user: '0'
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 3001:9090
+    restart: unless-stopped
+    volumes:
+      - ./prom_config/:/etc/prometheus
+      - ~/data/telemetry/prometheus/data:/prometheus
