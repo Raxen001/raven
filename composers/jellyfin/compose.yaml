@@ -17,14 +17,14 @@ services:
       - 8096:8096
       - 7359:7359/udp
       # - 1900:1900/udp # DLNA has been disabled.
+    runtime: nvidia
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
-              capabilities:
-                - gpu
+              count: all
+              capabilities: [gpu]
     restart: unless-stopped
 
   # Frontend for requesting movies

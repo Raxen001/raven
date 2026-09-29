@@ -58,7 +58,7 @@ restart_docker() {
 
 update_docker() {
     docker compose pull
-    docker compose down
+    # docker compose down
     docker compose up -d --remove-orphans
 }
 
