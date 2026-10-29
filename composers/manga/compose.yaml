@@ -1,6 +1,7 @@
 services:
   suwayomi:
     image: ghcr.io/suwayomi/suwayomi-server:preview
+    user: "1000:1000"
     environment:
       - TZ=Asia/Kolkata
       - BIND_IP=0.0.0.0

@@ -48,7 +48,7 @@ services:
 
   # lidarr - music 
   lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
+    image: lscr.io/linuxserver/lidarr:nightly
     container_name: lidarr
     environment:
       - PUID=1000

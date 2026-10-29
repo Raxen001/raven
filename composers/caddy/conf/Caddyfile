@@ -50,12 +50,8 @@ photos.{$DOMAIN} {
 	reverse_proxy http://immich-server:2283
 }
 
-navidrome.{$DOMAIN} {
-	reverse_proxy http://navidrome:4533
-}
-
 music.{$DOMAIN} {
-	reverse_proxy http://feishin:9180
+	reverse_proxy http://navidrome:4533
 }
 
 soulseek.{$DOMAIN} {
@@ -90,6 +86,10 @@ paper.{$DOMAIN} {
 	reverse_proxy http://paperless:8000 {
 		header_down Referrer-Policy "strict-origin-when-cross-origin"
 	}
+}
+
+tracker.{$DOMAIN} {
+    reverse_proxy http://yamtrack:8000
 }
 
 # radarr.{$DOMAIN} {
