@@ -6,15 +6,13 @@ services:
     environment:
       - "DOMAIN=raxen001.xyz"
     volumes:
-      - ./conf:/etc/caddy
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
-    extra_hosts:
-      - "host.docker.internal:192.168.1.4"
     restart: unless-stopped
 
 volumes:

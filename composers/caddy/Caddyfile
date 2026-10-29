@@ -1,22 +1,4 @@
-#{ vim: set ft=conf
-#
-# {
-# 	log {
-# 		output file /etc/caddy/caddy-log.json {
-# 			mode 444
-# 			roll_uncompressed
-# 		}
-# 	}
-# }
-
-{
-	admin :2019 # needs for prometheus
-    metrics {
-		per_host
-	}
-
-}
-
+# vim: set ft=caddy
 
 movie.{$DOMAIN} {
 	reverse_proxy http://jellyfin:8096
