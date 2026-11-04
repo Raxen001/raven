@@ -1,0 +1,47 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:17-rootless
+    container_name: forgejo
+    user: 1000:1000
+    env_file: .env
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - TZ=Asia/Kolkata
+      - FORGEJO__server__SSH_PORT=2222
+    volumes:
+      - ~/data/forgejo/data/:/var/lib/gitea
+    ports:
+      - '3000:3000'
+      - '2222:2222'
+    restart: unless-stopped
+
+  forgejo_db:
+    image: postgres:14
+    env_file: .env
+    volumes:
+      - ~/data/forgejo/db/:/var/lib/postgresql/data
+    restart: 'unless-stopped'
+
+  docker-in-docker:
+    image: docker:dind
+    container_name: 'docker_dind'
+    privileged: 'true'
+    command: ['dockerd', '-H', 'tcp://0.0.0.0:2375', '--tls=false']
+    restart: 'unless-stopped'
+
+  forgejo_runner:
+    image: 'data.forgejo.org/forgejo/runner:13'
+    links:
+      - docker-in-docker
+    depends_on:
+      docker-in-docker:
+        condition: service_started
+    environment:
+      DOCKER_HOST: tcp://docker-in-docker:2375
+    # User without root privileges, but with access to `./data`.
+    user: 1001:1001
+    volumes:
+      - ~/data/forgejo/runner/:/data
+    command: 'forgejo-runner daemon --config runner-config.yml'
+    restart: 'unless-stopped'

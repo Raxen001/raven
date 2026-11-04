@@ -74,6 +74,10 @@ tracker.{$DOMAIN} {
     reverse_proxy http://yamtrack:8000
 }
 
+git.{$DOMAIN} {
+    reverse_proxy http://forgejo:3000
+}
+
 # radarr.{$DOMAIN} {
 #     reverse_proxy http://radarr:7575
 # }
