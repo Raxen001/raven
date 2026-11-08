@@ -1,13 +1,12 @@
 services:
   navidrome:
     image: deluan/navidrome:latest
+    user: '1000:1000'
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Asia/Kolkata
       - ND_MUSICFOLDER=/music/artists/
     volumes:
-      - ~/data/navidrome:/data
+      - ~/data/navidrome:/data:z
       - "/hdd/Media/music/:/music/:ro"
     ports:
       - "4533:4533"
