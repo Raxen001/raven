@@ -1,13 +1,13 @@
 services:
   navidrome:
-    image: deluan/navidrome:latest
+    image: navidrome/navidrome:latest
     user: '1000:1000'
     environment:
       - TZ=Asia/Kolkata
       - ND_MUSICFOLDER=/music/artists/
     volumes:
       - ~/data/navidrome:/data:z
-      - "/hdd/Media/music/:/music/:ro"
+      - "/hdd/Media/music/:/music/:ro,z"
     ports:
       - "4533:4533"
     restart: unless-stopped
