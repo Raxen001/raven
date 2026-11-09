@@ -1,0 +1,40 @@
+---
+- name: Run homelab services
+  hosts: raven
+  vars:
+    quadlet_location: "{{ ansible_facts['user_dir'] }}/quadlets"
+    systemd_user_target: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/homelab.target"
+  
+  tasks:
+    - name: Homelab target
+      ansible.builtin.copy:
+        dest: "{{ systemd_user_target }}"
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Homelab services
+          Wants=podman-user-wait-network-online.service
+          After=podman-user-wait-network-online.service
+
+          [Install]
+          WantedBy=default.target
+      notify: reload systemd
+
+    - name: Sync quadlets
+      ansible.posix.synchronize:
+        mode: push
+        src: ../quadlets/
+        # debug
+        dest: "{{ quadlet_location }}"
+        delete: true
+
+    - name: Install quadlet application from a directory
+      containers.podman.podman_quadlet:
+        state: present
+        src: "{{ quadlet_location }}"
+
+  handlers:
+    - name: reload systemd
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        scope: user

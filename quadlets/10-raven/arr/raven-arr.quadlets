@@ -1,0 +1,74 @@
+# FileName=raven-linuxserverio-qbittorrent
+[Container]
+ContainerName=qbittorrent
+Environment=TZ=Asia/Kolkata WEBUI_PORT=8080 TORRENTING_PORT=6881
+Image=lscr.io/linuxserver/qbittorrent:latest
+PublishPort=8080:8080
+PublishPort=6881:6881
+PublishPort=6881:6881/udp
+Volume=%h/data/qbittorrent/:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-radarr
+[Container]
+ContainerName=radarr
+Environment=TZ=Asia/Kolkata
+Image=lscr.io/linuxserver/radarr:latest
+PublishPort=7878:7878
+Volume=%h/data/radarr/:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-sonarr
+[Container]
+ContainerName=sonarr
+Environment=TZ=Asia/Kolkata
+Image=lscr.io/linuxserver/sonarr:latest
+PublishPort=8989:8989
+Volume=%h/data/sonarr:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-lidarr
+[Container]
+ContainerName=lidarr
+Environment=TZ=Asia/Kolkata
+Image=lscr.io/linuxserver/lidarr:nightly
+PublishPort=8686:8686
+Volume=%h/data/lidarr:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-prowlarr
+[Container]
+ContainerName=prowlarr
+Environment=TZ=Asia/Kolkata
+Image=lscr.io/linuxserver/prowlarr:latest
+PublishPort=9696:9696
+Volume=%h/data/prowlarr/:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-bazarr
+[Container]
+Image=lscr.io/linuxserver/bazarr:latest
+ContainerName=bazarr
+Environment=TZ=Asia/Kolkata
+PublishPort=6767:6767
+Volume=%h/data/bazarr/config:/config:Z
+Volume=/hdd/:/hdd/
+
+---
+
+# FileName=raven-linuxserverio-flaresolverr
+[Container]
+ContainerName=flaresolverr
+Environment=LOG_LEVEL=info LOG_HTML=false CAPTCHA_SOLVER=none TZ=Asia/Kolkata
+Image=ghcr.io/flaresolverr/flaresolverr:latest
+PublishPort=8191:8191

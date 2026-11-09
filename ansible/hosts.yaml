@@ -1,0 +1,5 @@
+raven:
+  hosts:
+      ideapad:
+        ansible_host: raven
+        ansible_user: raven

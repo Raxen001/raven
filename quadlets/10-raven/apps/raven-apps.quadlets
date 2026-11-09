@@ -1,0 +1,62 @@
+# FileName=raven-homarr
+[Container]
+ContainerName=homarr
+Environment=SECRET_ENCRYPTION_KEY=18a6455eaceffca45eb7ab8e824f99de5352b1611b94c985d866e3b92650a923
+Image=ghcr.io/homarr-labs/homarr:latest
+PublishPort=7575:7575
+Volume=/usr/lib/systemd/user/podman.socket:/var/run/docker.sock:ro
+Volume=%h/data/homarr/appdata:/appdata:Z
+Volume=%h/data/homarr/configs:/app/data/configs:Z
+Volume=%h/data/homarr/icons:/app/public/icons:Z
+Volume=%h/data/homarr/data:/data:Z
+
+---
+
+# FileName=raven-speedtest
+[Container]
+ContainerName=speedtest
+User=0
+Group=0
+Image=docker.io/openspeedtest/latest
+PublishPort=8787:3000
+
+---
+
+# FileName=raven-drawio
+[Container]
+ContainerName=drawio
+Environment=TZ=Asia/Kolkata
+Image=docker.io/jgraph/drawio:latest
+PublishPort=9891:8080
+
+---
+
+#FileName=raven-navidrome
+[Container]
+ContainerName=navidrome
+Image=docker.io/navidrome/navidrome:latest
+User=0
+Group=0
+Environment=TZ=Asia/Kolkata ND_MUSICFOLDER=/music/artists/
+Volume=%h/data/navidrome:/data:z
+Volume=/hdd/Media/music:/music/:ro,z
+PublishPort=4533:4533
+
+---
+
+# FileName=raven-vaultwarden
+[Container]
+ContainerName=vaultwarden
+Image=docker.io/vaultwarden/server:latest
+Environment=DOMAIN=https://vault.raxen001.xyz
+Volume=%h/data/bitwarden/password/:/data/:z
+
+---
+
+# FileName=raven-suwayomi
+[Container]
+Environment=TZ=Asia/Kolkata BIND_IP=0.0.0.0 BIND_PORT=4567 DOWNLOAD_AS_CBZ=true EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"] FLARESOLVERR_ENABLED=true FLARESOLVERR_URL=http://flaresolverr:8191 DEBUG=false
+Image=ghcr.io/suwayomi/suwayomi-server:preview
+Volume=%h/data/manga/:/home/suwayomi/.local/share/Tachidesk:z
+Volume=/hdd/Media/manga/:/downloads
+PublishPort=4567:4567

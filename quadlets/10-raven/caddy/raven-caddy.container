@@ -1,0 +1,12 @@
+[Container]
+ContainerName=caddy
+Image=docker.io/library/caddy:latest
+Environment=DOMAIN=raxen001.xyz
+
+PublishPort=80:80
+PublishPort=443:443
+PublishPort=443:443/udp
+
+Volume=./Caddyfile:/etc/caddy/Caddyfile:z
+Volume=caddy_data:/data:z
+Volume=caddy_config:/config:z
