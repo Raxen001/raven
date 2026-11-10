@@ -1,7 +1,7 @@
 # FileName=raven-homarr
 [Container]
 ContainerName=homarr
-Environment=SECRET_ENCRYPTION_KEY=18a6455eaceffca45eb7ab8e824f99de5352b1611b94c985d866e3b92650a923
+EnvironmentFile=.env
 Image=ghcr.io/homarr-labs/homarr:latest
 PublishPort=7575:7575
 
