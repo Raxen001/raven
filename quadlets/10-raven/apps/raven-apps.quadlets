@@ -4,7 +4,11 @@ ContainerName=homarr
 Environment=SECRET_ENCRYPTION_KEY=18a6455eaceffca45eb7ab8e824f99de5352b1611b94c985d866e3b92650a923
 Image=ghcr.io/homarr-labs/homarr:latest
 PublishPort=7575:7575
-Volume=/usr/lib/systemd/user/podman.socket:/var/run/docker.sock:ro
+
+SecurityLabelType=container_runtime_t
+Volume=%t/podman/podman.sock:/var/run/docker.sock
+
+
 Volume=%h/data/homarr/appdata:/appdata:Z
 Volume=%h/data/homarr/configs:/app/data/configs:Z
 Volume=%h/data/homarr/icons:/app/public/icons:Z
@@ -15,9 +19,9 @@ Volume=%h/data/homarr/data:/data:Z
 # FileName=raven-speedtest
 [Container]
 ContainerName=speedtest
-User=0
-Group=0
 Image=docker.io/openspeedtest/latest
+UserNS=keep-id
+Environment=ENABLE_LETSENCRYPT=False
 PublishPort=8787:3000
 
 ---
@@ -55,8 +59,69 @@ Volume=%h/data/bitwarden/password/:/data/:z
 
 # FileName=raven-suwayomi
 [Container]
+ContainerName=suwayomi
 Environment=TZ=Asia/Kolkata BIND_IP=0.0.0.0 BIND_PORT=4567 DOWNLOAD_AS_CBZ=true EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"] FLARESOLVERR_ENABLED=true FLARESOLVERR_URL=http://flaresolverr:8191 DEBUG=false
 Image=ghcr.io/suwayomi/suwayomi-server:preview
-Volume=%h/data/manga/:/home/suwayomi/.local/share/Tachidesk:z
+Volume=%h/data/manga/:/home/suwayomi/.local/share/Tachidesk:Z
 Volume=/hdd/Media/manga/:/downloads
 PublishPort=4567:4567
+
+---
+
+#FileName=raven-jellyfin
+# https://jellyfin.org/docs/general/installation/container/?method=podman
+[Container]
+ContainerName=jellyfin
+Image=docker.io/jellyfin/jellyfin:latest
+Environment=NVIDIA_VISIBLE_DEVICES=all
+Environment=TZ=Asia/Kolkata
+Volume=%h/data/jellyfin/config/:/config:Z
+Volume=%h/data/jellyfin/cache/:/cache:Z
+
+Volume=/hdd/Media/:/Media/:z
+
+PublishPort=8096:8096/tcp
+
+# needed to share stuff betweeen arr stack and qbit and jellyfin
+User=1000:1000
+UserNS=keep-id
+AddDevice=nvidia.com/gpu=all
+AddDevice=/dev/dri/:/dev/dri/
+SecurityLabelDisable=true
+
+[Service]
+# Inform systemd of additional exit status
+SuccessExitStatus=0 143
+---
+
+#FileName=raven-seerr
+[Container]
+ContainerName=seerr
+Image=ghcr.io/seerr-team/seerr:latest
+Environment=TZ=Asia/Kolkata
+Environment=PORT=5055
+Volume=%h/data/seerr/:/app/config/:Z
+
+---
+
+#FileName=raven-slskd
+[Container]
+ContainerName=slskd
+Image=docker.io/slskd/slskd:latest
+User=1000:1000
+UserNS=keep-id
+
+PublishPort=5030:5030/tcp
+PublishPort=50300:50300/tcp
+# soulseek port
+PublishPort=2234:2234
+PublishPort=2242:2242
+
+# Media directories or ; delimeteed: for multiple "/Media;/tv-shows"
+Environment=SLSKD_SHARED_DIR=/Media
+Environment=SLSKD_DOWNLOADS_DIR=/Downloads/soulseek/downloads/
+Environment=SLSKD_INCOMPLETE_DIR=/Downloads/soulseek/incomplete/
+
+Volume=%h/data/soulseek/:/app:Z
+Volume=/hdd/Media/music/:/Media:z
+Volume=/hdd/Downloads/:/Downloads/:z

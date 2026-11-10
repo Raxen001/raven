@@ -1,11 +1,10 @@
-#FileName=rss
+# FileName=miniflux
 [Pod]
-HostName=miniflux
-NetworkAlias=miniflux
+PodName=miniflux
 
 ---
 
-#FileName=raven-miniflux
+# FileName=raven-miniflux
 [Unit]
 After=raven-miniflux-database.service
 Requires=raven-miniflux-database.service
@@ -13,17 +12,17 @@ Requires=raven-miniflux-database.service
 [Container]
 ContainerName=miniflux
 Image=quay.io/miniflux/miniflux:latest
-Pod=rss.pod
+Pod=miniflux.pod
 Environment=RUN_MIGRATIONS=1
 EnvironmentFile=.env
 PublishPort=9191:8080
 
 ---
 
-#FileName=raven-miniflux-database
+# FileName=raven-miniflux-database
 [Container]
 ContainerName=miniflux-database
 Image=docker.io/library/postgres:18
-Pod=rss.pod
+Pod=miniflux.pod
 Volume=%h/data/miniflux/db/:/var/lib/postgresql/:Z
 EnvironmentFile=.env

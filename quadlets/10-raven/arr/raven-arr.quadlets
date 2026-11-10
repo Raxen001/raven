@@ -7,7 +7,9 @@ PublishPort=8080:8080
 PublishPort=6881:6881
 PublishPort=6881:6881/udp
 Volume=%h/data/qbittorrent/:/config:Z
-Volume=/hdd/:/hdd/
+
+Volume=/hdd/Downloads/:/Downloads/:z
+Volume=/hdd/Media/Downloads/:/Media/:z
 
 ---
 
@@ -18,7 +20,7 @@ Environment=TZ=Asia/Kolkata
 Image=lscr.io/linuxserver/radarr:latest
 PublishPort=7878:7878
 Volume=%h/data/radarr/:/config:Z
-Volume=/hdd/:/hdd/
+Volume=/hdd/Media/:/Media/:z
 
 ---
 
@@ -29,7 +31,8 @@ Environment=TZ=Asia/Kolkata
 Image=lscr.io/linuxserver/sonarr:latest
 PublishPort=8989:8989
 Volume=%h/data/sonarr:/config:Z
-Volume=/hdd/:/hdd/
+
+Volume=/hdd/Media/:/Media/:z
 
 ---
 
@@ -40,7 +43,7 @@ Environment=TZ=Asia/Kolkata
 Image=lscr.io/linuxserver/lidarr:nightly
 PublishPort=8686:8686
 Volume=%h/data/lidarr:/config:Z
-Volume=/hdd/:/hdd/
+Volume=/hdd/Media/:/Media/:z
 
 ---
 
@@ -51,7 +54,7 @@ Environment=TZ=Asia/Kolkata
 Image=lscr.io/linuxserver/prowlarr:latest
 PublishPort=9696:9696
 Volume=%h/data/prowlarr/:/config:Z
-Volume=/hdd/:/hdd/
+Volume=/hdd/Media/:/Media/:z
 
 ---
 
@@ -62,7 +65,7 @@ ContainerName=bazarr
 Environment=TZ=Asia/Kolkata
 PublishPort=6767:6767
 Volume=%h/data/bazarr/config:/config:Z
-Volume=/hdd/:/hdd/
+Volume=/hdd/Media/:/Media/:z
 
 ---
 

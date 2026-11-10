@@ -29,7 +29,7 @@ home.{$DOMAIN} {
 }
 
 photos.{$DOMAIN} {
-	reverse_proxy http://immich-server:2283
+	reverse_proxy http://immich_server:2283
 }
 
 music.{$DOMAIN} {
@@ -37,7 +37,10 @@ music.{$DOMAIN} {
 }
 
 soulseek.{$DOMAIN} {
-	reverse_proxy http://soulseek:5030
+    reverse_proxy slskd:5030 {
+        header_up Upgrade "websocket"
+        header_up Connection "Upgrade"
+    }
 }
 
 vault.{$DOMAIN} {

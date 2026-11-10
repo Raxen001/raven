@@ -1,0 +1,41 @@
+# FileName=money
+[Pod]
+PodName=money
+
+---
+
+# FileName=raven-fireflyiii
+[Unit]
+Requires=raven-fireflyiii-db.service
+After=raven-fireflyiii-db.service
+
+[Container]
+ContainerName=firefly_iii_core
+Image=docker.io/fireflyiii/core:latest
+Pod=money.pod
+EnvironmentFile=.env
+Volume=%h/data/fireflyiii/data/:/var/www/html/storage/upload/:Z
+PublishPort=8888:8080
+
+---
+
+# FileName=raven-fireflyiii-db
+[Container]
+ContainerName=firefly_iii_db
+Image=docker.io/library/mariadb:lts
+Pod=money.pod
+EnvironmentFile=.db.env
+Volume=%h/data/fireflyiii/db/:/var/lib/mysql:Z
+
+[Service]
+Restart=always
+
+---
+
+# FileName=raven-fireflyiii-cron
+[Container]
+ContainerName=firefly_iii_cron
+Image=docker.io/library/alpine:latest
+Pod=money.pod
+EnvironmentFile=.env
+Exec=sh -c ' apk add tzdata && ln -s /usr/share/zoneinfo/Asia/Kolkata /etc/localtime | echo "0 3 * * * wget -qO- http://firefly_iii_core:8080/api/v1/cron/aac56dacafafb701724f0493738536ba;echo" | crontab - && crond -f -L /dev/stdout'

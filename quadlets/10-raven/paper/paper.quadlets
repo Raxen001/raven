@@ -1,0 +1,61 @@
+# FileName=paper
+[Pod]
+PodName=paper
+
+---
+
+# FileName=raven-paperless
+[Unit]
+Requires=raven-paperless-db.service raven-paperless-broker.service raven-paperless-gotenberg.service raven-paperless-tika.service
+After=raven-paperless-db.service raven-paperless-broker.service raven-paperless-gotenberg.service raven-paperless-tika.service
+
+[Container]
+ContainerName=paperless
+Image=ghcr.io/paperless-ngx/paperless-ngx:latest
+Pod=paper.pod
+EnvironmentFile=.env
+Environment=PAPERLESS_REDIS=redis://paperless_broker:6379 PAPERLESS_DBENGINE=mariadb PAPERLESS_DBHOST=paperless_db PAPERLESS_DBUSER=paperless  PAPERLESS_DBPORT=3306 PAPERLESS_TIKA_ENABLED=1 PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless_gotenberg:3000 PAPERLESS_TIKA_ENDPOINT=http://paperless_tika:9998
+PublishPort=8000:8000
+
+Volume=%h/data/paperless/data/:/usr/src/paperless/data/:z
+Volume=%h/data/paperless/media/:/usr/src/paperless/media/:z
+
+Volume=/hdd/Documents/paper/export:/usr/src/paperless/export:z
+Volume=/hdd/Documents/paper/consume:/usr/src/paperless/consume:z
+
+---
+
+# FileName=raven-paperless-broker
+[Container]
+ContainerName=paperless_broker
+Image=docker.io/library/redis:8
+Pod=paper.pod
+Volume=redisdata:/data
+
+---
+
+# FileName=raven-paperless-db
+[Container]
+ContainerName=paperless_db
+Image=docker.io/library/mariadb:11
+Pod=paper.pod
+EnvironmentFile=.env
+Environment=MARIADB_HOST=paperless MARIADB_DATABASE=paperless MARIADB_USER=paperless 
+Volume=%h/data/paperless/db/:/var/lib/mysql:Z
+
+---
+
+# FileName=raven-paperless-gotenberg
+[Container]
+ContainerName=paperless_gotenberg
+Image=docker.io/gotenberg/gotenberg:8.20
+Pod=paper.pod
+Exec=gotenberg '--chromium-disable-javascript=true' '--chromium-allow-list=file:///tmp/.*'
+
+---
+
+# FileName=raven-paperless-tika
+[Container]
+ContainerName=paperless_tika
+Image=docker.io/apache/tika:latest
+Pod=paper.pod

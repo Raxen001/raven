@@ -1,0 +1,59 @@
+# FileName=immich
+[Pod]
+PodName=immich
+
+---
+
+# FileName=raven-immich-server
+[Unit]
+Requires=raven-immich-redis.service raven-immich-database.service
+After=raven-immich-redis.service raven-immich-database.service
+
+[Container]
+ContainerName=immich_server
+Image=ghcr.io/immich-app/immich-server:release
+Pod=immich.pod
+AddDevice=nvidia.com/gpu=all
+
+EnvironmentFile=.env
+PublishPort=2283:2283
+Volume=/hdd/Pictures/:/data:Z
+Volume=/etc/localtime:/etc/localtime:ro
+
+SecurityLabelDisable=true
+NoNewPrivileges=true
+DropCapability=NET_RAW
+---
+
+# FileName=raven-immich-machine-learning
+[Container]
+ContainerName=immich_machine_learning
+Image=ghcr.io/immich-app/immich-machine-learning:release-cuda
+Pod=immich.pod
+AddDevice=nvidia.com/gpu=all
+
+EnvironmentFile=.env
+Volume=model-cache:/cache:Z
+
+SecurityLabelDisable=true
+---
+
+# FileName=raven-immich-redis
+[Container]
+ContainerName=immich_redis
+Image=docker.io/valkey/valkey:9
+Pod=immich.pod
+HealthCmd=redis-cli ping | grep -q PONG || exit 1
+
+---
+
+# FileName=raven-immich-database
+[Container]
+ContainerName=immich_database
+Image=ghcr.io/immich-app/postgres:14-vectorchord1.1.1
+Pod=immich.pod
+
+Environment=POSTGRES_INITDB_ARGS=--data-checksums
+ShmSize=128mb
+
+Volume=%h/data/immich/postgres:/var/lib/postgresql/data:Z
