@@ -2,6 +2,7 @@
 - name: Run homelab services
   hosts: raven
   vars:
+    # debug dir
     quadlet_location: "{{ ansible_facts['user_dir'] }}/quadlets"
     systemd_user_target: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/homelab.target"
 
@@ -30,7 +31,6 @@
       ansible.posix.synchronize:
         mode: push
         src: ../quadlets/
-        # debug
         dest: "{{ quadlet_location }}"
         delete: true
 
@@ -38,12 +38,10 @@
       containers.podman.podman_quadlet:
         state: present
         src: "{{ quadlet_location }}"
-      notify: reload systemd
-
+        reload_systemd: true
 
     - name: Start homelab server
       ansible.builtin.systemd_service:
         name: homelab.target
         state: restarted
         scope: user
-

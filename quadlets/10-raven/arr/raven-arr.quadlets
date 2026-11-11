@@ -9,7 +9,7 @@ PublishPort=6881:6881/udp
 Volume=%h/data/qbittorrent/:/config:Z
 
 Volume=/hdd/Downloads/:/Downloads/:z
-Volume=/hdd/Media/Downloads/:/Media/:z
+Volume=/hdd/Media/:/Media/:z
 
 ---
 

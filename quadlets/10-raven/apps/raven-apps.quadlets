@@ -5,9 +5,8 @@ EnvironmentFile=.env
 Image=ghcr.io/homarr-labs/homarr:latest
 PublishPort=7575:7575
 
-SecurityLabelType=container_runtime_t
-Volume=%t/podman/podman.sock:/var/run/docker.sock
-
+# SecurityLabelType=container_runtime_t
+# Volume=%t/podman/podman.sock:/var/run/docker.sock
 
 Volume=%h/data/homarr/appdata:/appdata:Z
 Volume=%h/data/homarr/configs:/app/data/configs:Z
