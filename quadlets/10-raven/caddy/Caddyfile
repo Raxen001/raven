@@ -1,22 +1,48 @@
 # vim: set ft=caddy
+# reusable snippet
+{
+	log default {
+		output stdout
+		format json
+	}
+
+	log access_file {
+		include http.log.access.main
+		output file /var/log/caddy/access.log {
+			roll_size 50MiB
+			roll_keep 10
+			roll_keep_for 720h
+		}
+		format json
+	}
+}
+
+(access_log) {
+    log main
+}
 
 movie.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://jellyfin:8096
 }
 
 rss.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://miniflux:8080
 }
 
 voxabook.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://host.docker.internal:9124
 }
 
 torrent.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://qbittorrent:8080
 }
 
 speed.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://speedtest:3000 {
 		request_buffers 35MiB
 		response_buffers 35MiB
@@ -25,18 +51,22 @@ speed.{$DOMAIN} {
 }
 
 home.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://homarr:7575
 }
 
 photos.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://immich_server:2283
 }
 
 music.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://navidrome:4533
 }
 
 soulseek.{$DOMAIN} {
+    import access_log
     reverse_proxy slskd:5030 {
         header_up Upgrade "websocket"
         header_up Connection "Upgrade"
@@ -44,40 +74,49 @@ soulseek.{$DOMAIN} {
 }
 
 vault.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://vaultwarden:80
 }
 
 seerr.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://seerr:5055
 }
 
 money.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://firefly_iii_core:8080
 }
 
 draw.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://drawio:8080
 }
 
 beszel.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://beszel:8090
 }
 
 manga.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://suwayomi:4567
 }
 
 paper.{$DOMAIN} {
+    import access_log
 	reverse_proxy http://paperless:8000 {
 		header_down Referrer-Policy "strict-origin-when-cross-origin"
 	}
 }
 
 tracker.{$DOMAIN} {
+    import access_log
     reverse_proxy http://yamtrack:8000
 }
 
 git.{$DOMAIN} {
+    import access_log
     reverse_proxy http://forgejo:3000
 }
 

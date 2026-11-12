@@ -1,2 +1,3 @@
 [Network]
 NetworkName=raven
+IPv6=true
