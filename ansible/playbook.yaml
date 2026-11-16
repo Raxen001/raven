@@ -27,6 +27,17 @@
           WantedBy=default.target
       notify: reload systemd
 
+    - name: Game target
+      ansible.builtin.copy:
+        dest: "{{ systemd_user_target }}"
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=Game services
+          Wants=podman-user-wait-network-online.service
+          After=podman-user-wait-network-online.service
+      notify: reload systemd
+
     - name: Sync quadlets
       ansible.posix.synchronize:
         mode: push
@@ -43,5 +54,11 @@
     - name: Start homelab server
       ansible.builtin.systemd_service:
         name: homelab.target
+        state: restarted
+        scope: user
+
+    - name: Start minecraft server
+      ansible.builtin.systemd_service:
+        name: game-minecraft
         state: restarted
         scope: user

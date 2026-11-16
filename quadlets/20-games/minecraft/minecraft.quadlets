@@ -1,0 +1,20 @@
+# FileName=game-minecraft
+[Container]
+ContainerName=minecraft
+Image=registry.gitlab.com/crafty-controller/crafty-4:latest
+
+Environment=TZ=Asia/Kolkata
+
+PublishPort=8443:8443
+PublishPort=8123:8123
+PublishPort=19132:19132/udp
+PublishPort=25500-25600:25500-25600
+
+Volume=%h/games/minecraft/backups:/crafty/backups:Z
+Volume=%h/games/minecraft/logs:/crafty/logs:Z
+Volume=%h/games/minecraft/servers:/crafty/servers:Z
+Volume=%h/games/minecraft/config:/crafty/app/config:Z
+Volume=%h/games/minecraft/import:/crafty/import:Z
+
+[Install]
+WantedBy=default.target

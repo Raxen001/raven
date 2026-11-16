@@ -59,8 +59,17 @@ Volume=%h/data/bitwarden/password/:/data/:z
 # FileName=raven-suwayomi
 [Container]
 ContainerName=suwayomi
-Environment=TZ=Asia/Kolkata BIND_IP=0.0.0.0 BIND_PORT=4567 DOWNLOAD_AS_CBZ=true EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"] FLARESOLVERR_ENABLED=true FLARESOLVERR_URL=http://flaresolverr:8191 DEBUG=false
 Image=ghcr.io/suwayomi/suwayomi-server:preview
+
+Environment=TZ=Asia/Kolkata
+Environment=BIND_IP=0.0.0.0
+Environment=BIND_PORT=4567
+Environment=DOWNLOAD_AS_CBZ=true
+Environment=EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
+Environment=FLARESOLVERR_ENABLED=true
+Environment=FLARESOLVERR_URL=http://flaresolverr:8191
+Environment=DEBUG=false
+
 Volume=%h/data/manga/:/home/suwayomi/.local/share/Tachidesk:Z
 Volume=/hdd/Media/manga/:/downloads
 PublishPort=4567:4567
@@ -124,3 +133,20 @@ Environment=SLSKD_INCOMPLETE_DIR=/Downloads/soulseek/incomplete/
 Volume=%h/data/soulseek/:/app:Z
 Volume=/hdd/Media/music/:/Media:z
 Volume=/hdd/Downloads/:/Downloads/:z
+
+---
+
+# FileName=raven-stirling
+[Container]
+ContainerName=stirling
+Image=docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+Memory=4g
+
+Volume=%h/data/stirling/configs:/configs:Z
+Volume=%h/data/stirling/logs:/logs:Z
+Volume=%h/data/stirling/customFiles:/customFiles:Z
+Volume=%h/data/stirling/pipeline:/pipeline:Z
+Volume=%h/data/stirling/storage:/storage:Z
+Volume=%h/data/stirling/tessdata:/usr/share/tessdata:Z
+
+# PublishPort=8080:8080
