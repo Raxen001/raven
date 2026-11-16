@@ -1,0 +1,165 @@
+# vim: set ft=caddy
+
+{
+	log default {
+		output stdout
+		format json
+	}
+
+	log access_file {
+		include http.log.access.main
+		output file /var/log/caddy/access.log {
+			roll_size 50MiB
+			roll_keep 10
+			roll_keep_for 720h
+		}
+		format json
+	}
+}
+
+# reusable snippet
+(access_log) {
+    log main
+}
+
+(tailscale_only) {
+    @denied not remote_ip 100.110.205.92 fd7a:115c:a1e0::2134:cd5c/128
+    redir @denied https://raxen001.xyz
+}
+
+cockpit.{$DOMAIN} {
+    import access_log
+    reverse_proxy host.containers.internal:9090 { 
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+movie.{$DOMAIN} {
+    import access_log
+	reverse_proxy jellyfin:8096
+}
+
+rss.{$DOMAIN} {
+    import access_log
+	reverse_proxy miniflux:8080
+}
+
+voxabook.{$DOMAIN} {
+    import access_log
+	reverse_proxy host.docker.internal:9124
+}
+
+torrent.{$DOMAIN} {
+    import access_log
+	reverse_proxy qbittorrent:8080
+}
+
+speed.{$DOMAIN} {
+    import access_log
+	reverse_proxy speedtest:3000 {
+		request_buffers 35MiB
+		response_buffers 35MiB
+		flush_interval -1
+	}
+}
+
+home.{$DOMAIN} {
+    import access_log
+	reverse_proxy homarr:7575
+}
+
+photos.{$DOMAIN} {
+    import access_log
+	reverse_proxy immich_server:2283
+}
+
+music.{$DOMAIN} {
+    import access_log
+	reverse_proxy navidrome:4533
+}
+
+soulseek.{$DOMAIN} {
+    import access_log
+    reverse_proxy slskd:5030 {
+        header_up Upgrade "websocket"
+        header_up Connection "Upgrade"
+    }
+}
+
+vault.{$DOMAIN} {
+    import access_log
+	reverse_proxy vaultwarden:80
+}
+
+seerr.{$DOMAIN} {
+    import access_log
+	reverse_proxy seerr:5055
+}
+
+money.{$DOMAIN} {
+    import access_log
+	reverse_proxy firefly_iii_core:8080
+}
+
+draw.{$DOMAIN} {
+    import access_log
+	reverse_proxy drawio:8080
+}
+
+beszel.{$DOMAIN} {
+    import access_log
+	reverse_proxy beszel:8090
+}
+
+manga.{$DOMAIN} {
+    import access_log
+	reverse_proxy suwayomi:4567
+}
+
+paper.{$DOMAIN} {
+    import access_log
+	reverse_proxy paperless:8000 {
+		header_down Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}
+
+tracker.{$DOMAIN} {
+    import access_log
+    reverse_proxy yamtrack:8000
+}
+
+git.{$DOMAIN} {
+    import access_log
+    reverse_proxy forgejo:3000
+}
+
+pdf.{$DOMAIN} {
+    import access_log
+    reverse_proxy stirling:8080
+}
+
+# radarr.{$DOMAIN} {
+#     import access_log
+#     import tailscale_only
+#     reverse_proxy radarr:7575
+# }
+#
+# sonarr.{$DOMAIN} {
+#     import access_log
+#     import tailscale_only
+#     reverse_proxy sonarr:8989
+# }
+#
+# lidarr.{$DOMAIN} {
+#     import access_log
+#     import tailscale_only
+#     reverse_proxy lidarr:8686
+# }
+#
+# prowlarr.{$DOMAIN} {
+#     import access_log
+#     import tailscale_only
+#     reverse_proxy prowlarr:9696
+# }

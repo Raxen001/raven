@@ -1,0 +1,27 @@
+# FileName=raven-forgejo
+[Container]
+ContainerName=forgejo
+Image=codeberg.org/forgejo/forgejo:17
+
+EnvironmentFile=.env
+
+Volume=%h/data/forgejo/data/:/data/:Z
+Volume=/etc/localtime:/etc/localtime:ro
+
+PublishPort=3000:3000
+PublishPort=2222:2222
+
+# [Service]
+# ExecStartPre=/usr/bin/mkdir -p %h/data/forgejo/data/
+
+---
+
+# FileName=raven-forgejo-db
+[Container]
+ContainerName=forgejo-db
+Image=docker.io/library/postgres:17
+EnvironmentFile=.env
+Volume=%h/data/forgejo/db/:/var/lib/postgresql/data:Z
+
+# [Service]
+# ExecStartPre=/usr/bin/mkdir -p %h/data/forgejo/db/

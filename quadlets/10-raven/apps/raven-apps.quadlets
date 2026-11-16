@@ -1,0 +1,152 @@
+# FileName=raven-homarr
+[Container]
+ContainerName=homarr
+EnvironmentFile=.env
+Image=ghcr.io/homarr-labs/homarr:latest
+PublishPort=7575:7575
+
+# SecurityLabelType=container_runtime_t
+# Volume=%t/podman/podman.sock:/var/run/docker.sock
+
+Volume=%h/data/homarr/appdata:/appdata:Z
+Volume=%h/data/homarr/configs:/app/data/configs:Z
+Volume=%h/data/homarr/icons:/app/public/icons:Z
+Volume=%h/data/homarr/data:/data:Z
+
+---
+
+# FileName=raven-speedtest
+[Container]
+ContainerName=speedtest
+Image=docker.io/openspeedtest/latest
+UserNS=keep-id
+Environment=ENABLE_LETSENCRYPT=False
+PublishPort=8787:3000
+
+---
+
+# FileName=raven-drawio
+[Container]
+ContainerName=drawio
+Environment=TZ=Asia/Kolkata
+Image=docker.io/jgraph/drawio:latest
+PublishPort=9891:8080
+
+---
+
+#FileName=raven-navidrome
+[Container]
+ContainerName=navidrome
+Image=docker.io/navidrome/navidrome:latest
+User=0
+Group=0
+Environment=TZ=Asia/Kolkata ND_MUSICFOLDER=/music/artists/
+Volume=%h/data/navidrome:/data:z
+Volume=/hdd/Media/music:/music/:ro,z
+PublishPort=4533:4533
+
+---
+
+# FileName=raven-vaultwarden
+[Container]
+ContainerName=vaultwarden
+Image=docker.io/vaultwarden/server:latest
+Environment=DOMAIN=https://vault.raxen001.xyz
+Volume=%h/data/bitwarden/password/:/data/:z
+
+---
+
+# FileName=raven-suwayomi
+[Container]
+ContainerName=suwayomi
+Image=ghcr.io/suwayomi/suwayomi-server:preview
+
+Environment=TZ=Asia/Kolkata
+Environment=BIND_IP=0.0.0.0
+Environment=BIND_PORT=4567
+Environment=DOWNLOAD_AS_CBZ=true
+Environment=EXTENSION_REPOS=["https://raw.githubusercontent.com/keiyoushi/extensions/repo/index.min.json"]
+Environment=FLARESOLVERR_ENABLED=true
+Environment=FLARESOLVERR_URL=http://flaresolverr:8191
+Environment=DEBUG=false
+
+Volume=%h/data/manga/:/home/suwayomi/.local/share/Tachidesk:Z
+Volume=/hdd/Media/manga/:/downloads
+PublishPort=4567:4567
+
+---
+
+#FileName=raven-jellyfin
+# https://jellyfin.org/docs/general/installation/container/?method=podman
+[Container]
+ContainerName=jellyfin
+Image=docker.io/jellyfin/jellyfin:latest
+Environment=NVIDIA_VISIBLE_DEVICES=all
+Environment=TZ=Asia/Kolkata
+Volume=%h/data/jellyfin/config/:/config:Z
+Volume=%h/data/jellyfin/cache/:/cache:Z
+
+Volume=/hdd/Media/:/Media/:z
+
+PublishPort=8096:8096/tcp
+
+# needed to share stuff betweeen arr stack and qbit and jellyfin
+User=1000:1000
+UserNS=keep-id
+AddDevice=nvidia.com/gpu=all
+AddDevice=/dev/dri/:/dev/dri/
+SecurityLabelDisable=true
+
+[Service]
+# Inform systemd of additional exit status
+SuccessExitStatus=0 143
+---
+
+#FileName=raven-seerr
+[Container]
+ContainerName=seerr
+Image=ghcr.io/seerr-team/seerr:latest
+Environment=TZ=Asia/Kolkata
+Environment=PORT=5055
+Volume=%h/data/seerr/:/app/config/:Z
+
+---
+
+#FileName=raven-slskd
+[Container]
+ContainerName=slskd
+Image=docker.io/slskd/slskd:latest
+User=1000:1000
+UserNS=keep-id
+
+PublishPort=5030:5030/tcp
+PublishPort=50300:50300/tcp
+# soulseek port
+PublishPort=2234:2234
+PublishPort=2242:2242
+
+# Media directories or ; delimeteed: for multiple "/Media;/tv-shows"
+Environment=SLSKD_SHARED_DIR=/Media
+Environment=SLSKD_DOWNLOADS_DIR=/Downloads/soulseek/downloads/
+Environment=SLSKD_INCOMPLETE_DIR=/Downloads/soulseek/incomplete/
+
+Volume=%h/data/soulseek/:/app:Z
+Volume=/hdd/Media/music/:/Media:z
+Volume=/hdd/Downloads/:/Downloads/:z
+
+---
+
+# FileName=raven-stirling
+[Container]
+ContainerName=stirling
+Image=docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+Memory=4g
+
+Volume=%h/data/stirling/configs:/configs:Z
+Volume=%h/data/stirling/logs:/logs:Z
+Volume=%h/data/stirling/customFiles:/customFiles:Z
+Volume=%h/data/stirling/pipeline:/pipeline:Z
+Volume=%h/data/stirling/storage:/storage:Z
+Volume=%h/data/stirling/tessdata:/usr/share/tessdata:Z
+
+# PublishPort=8080:8080
