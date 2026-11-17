@@ -139,7 +139,7 @@ Volume=/hdd/Downloads/:/Downloads/:z
 # FileName=raven-stirling
 [Container]
 ContainerName=stirling
-Image=docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+Image=ghcr.io/stirling-tools/stirling-pdf:latest
 Memory=4g
 
 Volume=%h/data/stirling/configs:/configs:Z
