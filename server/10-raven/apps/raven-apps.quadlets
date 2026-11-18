@@ -19,7 +19,6 @@ Volume=%h/data/homarr/data:/data:Z
 [Container]
 ContainerName=speedtest
 Image=docker.io/openspeedtest/latest
-UserNS=keep-id
 Environment=ENABLE_LETSENCRYPT=False
 PublishPort=8787:3000
 
@@ -28,8 +27,9 @@ PublishPort=8787:3000
 # FileName=raven-drawio
 [Container]
 ContainerName=drawio
-Environment=TZ=Asia/Kolkata
 Image=docker.io/jgraph/drawio:latest
+Environment=TZ=Asia/Kolkata
+Environment=DRAWIO_CONFIG="{\"defaultPageVisible\":false,\"sketchMode\":true}"
 PublishPort=9891:8080
 
 ---
